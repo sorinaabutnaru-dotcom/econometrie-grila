@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ro"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Econometrie – test grilă</title>
+<style>
+:root{--bg:#f7f7f3;--fg:#1c1c1a;--card:#fff;--mut:#66665f;--bd:#d6d6cd;--ok:#17703a;--okb:#e2f4e8;--no:#b3261e;--nob:#fbe8e6;--ac:#2a5bd0;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#151517;--fg:#ecece8;--card:#212124;--mut:#a0a09a;--bd:#3a3a3f;--ok:#6fd18f;--okb:#17301f;--no:#ff8a80;--nob:#3a1a18;--ac:#8fb0ff}}
+:root[data-theme="dark"]{--bg:#151517;--fg:#ecece8;--card:#212124;--mut:#a0a09a;--bd:#3a3a3f;--ok:#6fd18f;--okb:#17301f;--no:#ff8a80;--nob:#3a1a18;--ac:#8fb0ff}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+#app{max-width:720px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:1.5rem;margin:.2em 0}h2{font-size:1.15rem;line-height:1.4;margin:.8em 0}
+.m{color:var(--mut);font-size:.9rem}
+.g{display:grid;gap:8px;margin-top:16px}
+button{font:inherit;color:var(--fg);background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:12px 14px;text-align:left;cursor:pointer;width:100%;margin:6px 0}
+button:hover:not(:disabled){border-color:var(--ac)}
+button:disabled{cursor:default;color:var(--fg);opacity:1}
+.o.ok{background:var(--okb);border-color:var(--ok)}.o.no{background:var(--nob);border-color:var(--no)}
+.o.sel{border-color:var(--ac);box-shadow:inset 0 0 0 1px var(--ac)}
+.e{padding:12px 14px;border-radius:10px;margin:10px 0}.e.y{background:var(--okb)}.e.n{background:var(--nob)}
+.nx{background:var(--ac);color:#fff;border-color:var(--ac);text-align:center}
+.bar{height:6px;background:var(--bd);border-radius:3px;overflow:hidden;margin-top:6px}.bar i{display:block;height:100%;background:var(--ac)}
+.big{font-size:2.4rem;font-weight:700;margin:.2em 0}
+</style></head><body><div id="app"></div>
+<script>
+const CH={1:"U1 · Noțiuni fundamentale",2:"U2 · Regresia liniară simplă",3:"U3 · Regresia liniară multiplă",4:"U4 · Regresia neliniară",5:"U5 · Variabile alternative (ANOVA/ANCOVA)",6:"U6 · Verificarea ipotezelor"};
+// [capitol, întrebare, răspuns corect, variante greșite..., explicație]
+const Q=[
+[1,"Care este scopul econometriei, conform „părinților” disciplinei?","Analiza cantitativă a fenomenelor economice, pe baza teoriei și a datelor de observație, cu metode de inferență statistică","Doar descrierea grafică a datelor economice","Dezvoltarea teoriei economice fără date empirice","Doar calculul indicatorilor statisticii descriptive","Econometria îmbină teoria economică, datele și inferența statistică."],
+[1,"Variabila dependentă se mai numește:","explicată, endogenă, răspuns","exogenă","stimul","de control","Exogenă, stimul și de control sunt denumiri ale variabilei independente."],
+[1,"Variabila aleatoare (eroarea) sintetizează:","influența tuturor factorilor care nu apar explicit în model","influența variabilei independente","valoarea parametrilor modelului","doar erorile de calcul ale cercetătorului","Include factorii omiși, specificarea modelului și erorile de măsurare."],
+[1,"Parametrii modelului econometric sunt:","constante reale, fixe, dar necunoscute","variabile aleatoare","valori calculate pe baza eșantionului","variabile observabile","Estimatorii sunt variabile aleatoare; estimațiile sunt valorile calculate pe eșantion."],
+[1,"Estimatorii sunt:","variabile aleatoare construite pe spațiul de selecție pentru a estima parametrii","constante reale necunoscute","valori numerice calculate pe un eșantion","erorile modelului","Valorile concrete obținute pe un eșantion se numesc estimații."],
+[1,"Care etapă urmează imediat după estimarea parametrilor?","Testarea ipotezelor","Culegerea datelor","Formalizarea problemei într-un model","Utilizarea modelului în decizii","Ordinea: teorie → model → date → estimare → testare → predicție → utilizare."],
+[1,"În modelul keynesian al consumului Y = b₀ + b₁X, parametrul b₁ este:","înclinația marginală către consum","consumul autonom","venitul populației","variabila reziduală","b₀ = consum autonom; X = venit."],
+[2,"Diferența dintre un model determinist și unul stochastic este că, în cel stochastic:","pentru o valoare a lui X există mai multe valori ale lui Y, determinate probabilistic","nu există variabilă independentă","Y este explicat în totalitate de X","se folosește doar în științele naturii","Modelele funcționale apar în științele naturii; în economie, cele probabiliste."],
+[2,"Din punct de vedere statistic, regresia este:","o medie condiționată, M(Y/X = xᵢ)","media generală a lui Y","varianța lui Y","mediana lui X","Cazul liniar: M(Y/X=xᵢ) = β₀ + β₁xᵢ."],
+[2,"În Y = β₀ + β₁X + ε, parametrul β₀ arată:","valoarea medie a lui Y când X = 0","variația lui Y la +1 unitate a lui X","intensitatea legăturii","varianța erorilor","β₀ = intercept (ordonata la origine)."],
+[2,"Dacă β₁ este negativ, între variabile există:","o legătură inversă","o legătură directă","nicio legătură","o legătură neliniară","β₁ = 0 ⇒ nu există legătură liniară."],
+[2,"Care NU este ipoteză clasică asupra erorilor?","Erorile sunt corelate cu variabila independentă","Media erorilor este zero","Homoscedasticitatea","Normalitatea","Ipoteza corectă este cov(X, ε) = 0."],
+[2,"Metoda celor mai mici pătrate minimizează:","suma pătratelor erorilor","suma erorilor","suma valorilor lui Y","produsul erorilor","Min Σεᵢ² = Σ(yᵢ − b₀ − b₁xᵢ)²."],
+[2,"Un estimator este nedeplasat dacă:","media lui este egală cu parametrul estimat","are varianță minimă","converge în probabilitate","este normal distribuit","E(b̂) = β. Eficiența = varianță minimă; convergența = n mare."],
+[2,"Relația de descompunere a variației este:","TSS = ESS + RSS","TSS = ESS − RSS","ESS = TSS + RSS","RSS = TSS + ESS","Totală = explicată + reziduală."],
+[2,"Raportul de determinație R² = ESS/TSS arată:","ponderea din variația lui Y explicată de model","intensitatea și sensul legăturii","panta dreptei de regresie","varianța erorilor","0 ≤ R² ≤ 1; în regresia simplă, R² = r²."],
+[2,"Coeficientul de corelație este identic cu panta dreptei dacă:","variabilele sunt standardizate","Y are valori mai mari decât X","variabilele au medii egale","eșantionul este mare","La standardizare, b₁ = r."],
+[2,"Intervalul de încredere pentru β₁ este:","b₁ ± t(α/2; n−2) · s(b₁)","b₁ ± z · s²","b₁ ± t(α; n) · s(b₀)","b₁ ± F(α; 1; n−2)","Se folosește repartiția Student cu n−2 grade de libertate."],
+[2,"Statistica testului t pentru β₁ este:","t = b₁ / s(b₁), cu n−2 grade de libertate","t = b₁ · s(b₁)","t = R²/(1−R²)","t = ESS/RSS","H₀: β₁ = 0 (nu există legătură liniară)."],
+[2,"Se respinge H₀ în testul t dacă:","Sig t este mai mic decât α","Sig t este mai mare decât α","|t calc| este mai mic decât t teoretic","Sig t = 1","Echivalent: |t calc| > t(α/2; n−2)."],
+[2,"Eroarea de speța întâi este:","respingerea lui H₀ când ea este adevărată","acceptarea lui H₀ când ea este falsă","respingerea lui H₁ când este adevărată","eroarea de măsurare a datelor","Probabilitatea ei este pragul de semnificație α."],
+[2,"Testul Fisher în regresia simplă verifică:","semnificația modelului de regresie în ansamblu","media erorilor","normalitatea erorilor","autocorelarea erorilor","F = (ESS/(k−1)) / (RSS/(n−k))."],
+[2,"Dacă TSS = 168 și ESS = 51,021, raportul de determinație este aproximativ:","0,304","0,696","0,551","3,29","51,021/168 ≈ 0,304: 30,4% din variația lui Y este explicată."],
+[2,"Pentru r = 0,661 (salariu–educație) și Sig = 0,000, concluzia corectă este:","legătură directă, de intensitate medie, semnificativă statistic","legătură inversă, slabă","legătură nesemnificativă","legătură perfectă","Sig < 0,05 ⇒ se respinge H₀: ρ = 0."],
+[3,"Într-un model de regresie multiplă cu p variabile independente, numărul de parametri este:","k = p + 1","k = p","k = p − 1","k = 2p","Parametrul suplimentar este constanta β₀ (variabila X₀ = 1)."],
+[3,"Parametrul βᵢ arată variația medie a lui Y la +1 unitate a lui Xᵢ:","în condițiile în care celelalte variabile independente sunt constante","indiferent de celelalte variabile","când toate variabilele sunt zero","exprimată în procente","Este influența parțială a fiecărei variabile."],
+[3,"În scriere matriceală, estimatorii MCMP sunt:","b = (X′X)⁻¹ X′Y","b = (XX′)⁻¹ Y","b = X′Y","b = (X′X) Y⁻¹","Rezultă din ecuația normală X′X·b = X′Y."],
+[3,"Coeficientul de corelație parțială r(y1.2) măsoară legătura dintre:","Y și X₁, cu influența lui X₂ ținută constantă","Y și X₁, ignorând X₂","X₁ și X₂","Y și toate variabilele simultan","Cel bivariat nu controlează celelalte variabile."],
+[3,"Coeficientul de determinație multiplă arată:","ponderea din variația lui Y explicată simultan de toate variabilele independente","corelația dintre X₁ și X₂","influența unei singure variabile","varianța erorilor","Raportul de corelație multiplă este R = √R²."],
+[3,"Se folosește R² ajustat deoarece R²:","nu ține cont de numărul de parametri și de gradele de libertate","este mereu negativ","nu poate fi calculat","depinde de unitatea de măsură","Pentru k > 1: R² ajustat < R²."],
+[3,"Testul t pentru coeficienții unui model cu 2 variabile independente are:","n − 3 grade de libertate","n − 1 grade de libertate","n − 2 grade de libertate","3 grade de libertate","n − k, cu k = 3."],
+[3,"Ipoteza nulă a testului F în regresia multiplă este:","toți coeficienții de regresie (fără constantă) sunt simultan zero","β₀ = 0","cel puțin un coeficient este zero","erorile sunt normale","Se respinge dacă Sig F < α (modelul este semnificativ)."],
+[3,"Influența marginală a unei variabile nou introduse în model se testează cu:","un test Fisher care compară R² înainte și după introducere","testul Durbin-Watson","testul Jarque-Bera","testul Glejser","H₀: variabila nu influențează semnificativ variația lui Y."],
+[3,"Dacă b = 0,161 pentru populația rurală (PIB inclus în model), interpretarea corectă este:","la +1 persoană în populația rurală, numărul de pensionari crește în medie cu 0,161, PIB constant","numărul de pensionari scade cu 0,161 persoane","numărul de pensionari crește cu 0,161 indiferent de PIB","populația rurală crește cu 0,161 la +1 pensionar","Interpretarea cere „ceteris paribus”."],
+[4,"În modelul log-liniar ln y = ln β₀ + β₁ ln x + ε, parametrul β₁ este:","elasticitatea lui Y în raport cu X (constantă)","variația absolută a lui Y la +1 unitate a lui X","valoarea lui Y când X = 0","rata de creștere în timp","Elasticitatea este constantă în acest model."],
+[4,"Dacă b₁ = −0,628 (mortalitate infantilă în funcție de PIB/loc, log-liniar), atunci:","la +1% PIB/loc, mortalitatea scade în medie cu 0,628%","la +1$ PIB/loc, mortalitatea scade cu 0,628","la +1% PIB/loc, mortalitatea crește cu 0,628%","la +1$ PIB/loc, mortalitatea crește cu 0,628%","b₁ este elasticitate: variație procentuală la variație procentuală."],
+[4,"În regresia liniară simplă, elasticitatea:","nu este constantă: E = b₁·X/Y, iar cea medie este b₁·x̄/ȳ","este egală cu b₁","este constantă","este mereu 1","Doar la log-liniar elasticitatea este chiar b₁."],
+[4,"Pentru ln y = β₀ + β₁x + ε, β₁ arată:","variația relativă medie a lui Y la +1 unitate a lui X","variația absolută a lui Y la +1% a lui X","elasticitatea constantă","valoarea limită a lui Y","Ex.: b₁ = −0,004 ⇒ timpul de accelerare scade cu 0,4% la +1 CP."],
+[4,"Pentru y = β₀ + β₁ ln x + ε, valoarea b₁/100 reprezintă:","variația absolută medie a lui Y la o creștere cu 1% a lui X","variația procentuală a lui Y la +1 unitate a lui X","elasticitatea","valoarea lui Y pentru X = 0","Ex.: 6,154/100 ≈ 0,06 ani la +1% PIB/loc."],
+[4,"În modelul de trend ln y = β₀ + β₁t + ε, parametrul β₁ este:","rata medie de variație a lui Y în timp","valoarea lui Y la t = 1","variația absolută a lui Y pe perioadă","elasticitatea constantă a lui Y","t este variabila timp."],
+[4,"În modelul reciproc (curba Phillips), β₀ este:","valoarea limită a lui Y când X tinde la infinit","valoarea lui Y pentru X = 0","elasticitatea","variația lui Y la +1 unitate a lui X","Dacă β₁ > 0, o creștere a lui X scade Y."],
+[4,"Modelul parabolic este potrivit pentru fenomene care au:","un punct de extrem (minim sau maxim)","elasticitate constantă","o limită asimptotică","trei puncte de extrem","Ex.: costul unitar în funcție de producție; x* = −b₁/(2b₂)."],
+[4,"La estimarea modelului Y = β₀·Xᵝ¹·e prin logaritmare, estimatorii sunt:","b₁ nedeplasat, b₀ deplasat","ambii nedeplasați","ambii deplasați","b₀ nedeplasat, b₁ deplasat","Observație din curs despre modelul log-liniar."],
+[5,"Un model ANOVA are ca variabile independente:","doar variabile alternative (dummy)","doar variabile numerice","variabile dummy și numerice","doar variabile aleatoare","Cu ambele tipuri de variabile avem ANCOVA."],
+[5,"În Y = a₀ + a₁D + ε, a₀ este:","media lui Y pentru grupa cu D = 0","media lui Y pentru grupa cu D = 1","diferența dintre cele două medii","panta dreptei","a₀ + a₁ = media grupei D = 1; a₁ = diferența mediilor."],
+[5,"Testarea lui a₁ în ANOVA cu două grupe echivalează cu testarea ipotezei:","μ₁ = μ₂ (egalitatea mediilor)","σ₁ = σ₂","a₀ = 0","R² = 0","H₀: a₁ = 0 ⇔ mediile celor două grupe sunt egale."],
+[5,"O variabilă nominală cu p categorii se transformă în:","p − 1 variabile dummy","p variabile dummy","p + 1 variabile dummy","o singură variabilă dummy","Categoria fără dummy este cea de referință."],
+[5,"Dacă a₀ = 74,95 și a₁ = −7,41 (D = 1 pentru bărbați), speranța medie de viață masculină este:","67,54 ani","74,95 ani","82,36 ani","7,41 ani","a₀ + a₁ = 67,54."],
+[5,"Într-un model ANCOVA cu o variabilă dummy și una numerică, dreptele de regresie sunt:","paralele (aceeași pantă, ordonate diferite)","identice","concurente (pante diferite)","perpendiculare","Diferența dintre ordonatele la origine este a₁."],
+[5,"În salariu = a₀ + a₁D + bX, cu a₁ = 8423,46 (D = 1 pentru bărbați), a₁ înseamnă:","bărbații câștigă în medie cu 8423,46$ mai mult decât femeile, la același nivel de educație","femeile câștigă cu 8423,46$ mai mult","salariul crește cu 8423,46$ la +1 an de studii","salariul femeilor este 8423,46$","Efectul unui an de studii este b = 3391,68$."],
+[5,"Un model ANCOVA cu două variabile dummy și o variabilă numerică conduce la:","patru regresii (patru grupe)","două regresii","trei regresii","o singură regresie","2 × 2 combinații ale valorilor dummy."],
+[5,"În modelul cu 3 grupe (Manager = referință), a₁ = −28072,7 pentru Clerical arată că:","salariul mediu al Clerical este cu 28072,7$ mai mic decât al managerilor, la același nivel de educație","Clerical câștigă mai mult decât managerii","managerii câștigă 28072,7$","a₁ este salariul mediu al Clerical","a₀ = media grupei de referință (Manager) pentru X = 0."],
+[6,"Încălcarea ipotezei E(ε) = 0 are drept efect:","estimatori deplasați","pierderea eficienței","autocorelare","coliniaritate","Se verifică cu un test Student asupra mediei erorilor (H₀: μ = 0)."],
+[6,"Efectul heteroscedasticității asupra estimatorilor MCMP este:","pierderea eficienței (varianță mai mare)","deplasarea estimatorilor","pierderea convergenței","varianță infinită","Estimatorii rămân nedeplasați, dar nu mai au varianță minimă."],
+[6,"Care test NU este folosit pentru verificarea homoscedasticității?","Durbin-Watson","Glejser","Goldfeld-Quandt","Corelația Spearman a rangurilor","Durbin-Watson testează autocorelarea erorilor."],
+[6,"În testul Glejser se regresează:","valorile absolute ale erorilor estimate pe variabila independentă","Y pe X²","erorile pe erorile decalate","X₁ pe X₂","Dacă a₁ este semnificativ ⇒ model heteroscedastic."],
+[6,"Testul Goldfeld-Quandt presupune:","ordonarea după X, omiterea valorilor centrale, două regresii și compararea RSS cu un test F","calculul statisticii DW","calculul VIF","compararea asimetriei și boltirii","F = RSS₂/RSS₁; dacă F calc > F teoretic ⇒ heteroscedasticitate."],
+[6,"Dacă RSS₁ = 6 815 593 304 și RSS₂ = 45 525 230 880, F calculat este aproximativ:","6,68","0,15","2,64","52,34","RSS₂/RSS₁ ≈ 6,68."],
+[6,"Heteroscedasticitatea se corectează prin:","metoda celor mai mici pătrate ponderată","modelul de cvasi-diferență","procedeul Cochrane-Orcutt","eliminarea unei variabile independente","Cvasi-diferența și Cochrane-Orcutt corectează autocorelarea."],
+[6,"Testul Jarque-Bera se bazează pe:","asimetrie și boltire și urmează o lege χ² cu 2 grade de libertate","media și varianța și urmează legea t","autocorelația de ordin 1 și urmează legea F","VIF și Tolerance","Normal: Sw = 0 și K = 0. Se respinge normalitatea dacă JB > χ² teoretic."],
+[6,"Dacă erorile nu sunt normale, estimatorii MCMP:","nu mai sunt normal distribuiți (normalitate asimptotică pentru n mare)","devin deplasați","au varianță infinită","sunt în continuare exact normali","De aceea, la eșantioane mari, încălcarea contează mai puțin."],
+[6,"Printre cauzele autocorelării erorilor se numără:","specificarea greșită, variabile semnificative omise, inerția fenomenelor în timp","normalitatea erorilor","eșantioanele mari","homoscedasticitatea","Autocorelarea = corelație serială a erorilor."],
+[6,"Statistica Durbin-Watson ia valori în intervalul:","[0 ; 4]","[−1 ; 1]","[0 ; 1]","[0 ; ∞)","d ≈ 2 ⇒ fără autocorelare; d = 0 ⇒ pozitivă maximă; d = 4 ⇒ negativă maximă."],
+[6,"Dacă d calc = 1,139, dL = 1,748 și dU = 1,789, decizia este:","se respinge H₀: autocorelare pozitivă","se acceptă H₀: erorile nu sunt autocorelate","zonă de nedeterminare","autocorelare negativă","d calc ∈ (0 ; dL)."],
+[6,"Autocorelarea erorilor, cu coeficientul r necunoscut, se corectează prin:","procedeul iterativ Cochrane-Orcutt","testul Glejser","calculul VIF","metoda celor mai mici pătrate ponderată","Cu r cunoscut se folosește modelul de cvasi-diferență."],
+[6,"În cazul coliniarității perfecte, varianța estimatorilor este:","infinită (parametrii nu pot fi estimați)","zero","mică","egală cu σ²","La coliniaritate imperfectă, varianțele sunt mari."],
+[6,"Indicatorul VIF se definește ca:","1/(1 − R²ⱼ), cu R²ⱼ din regresia auxiliară a lui Xⱼ pe celelalte variabile","1 − R²","R²/(1 − R²)","RSS/TSS","VIF = 1 ⇒ fără coliniaritate; VIF peste 10 ⇒ coliniaritate."],
+[6,"Tolerance (TOL) = 1 înseamnă că variabilele independente sunt:","necoliniare","perfect coliniare","puternic corelate","dependente liniar","TOL = 1/VIF; TOL → 0 ⇒ coliniaritate perfectă."],
+[6,"Un indiciu de coliniaritate este:","R² mare, dar parametri nesemnificativi la testul t","R² mic și parametri semnificativi","DW apropiat de 2","VIF = 1","Corecții: eliminarea variabilei, transformări (decalaj, diferență)."]
+];
+// Testele din curs: [capitol, întrebare, nr. răspunsuri corecte, corecte..., greșite..., explicație]
+const T=[
+[1,"Modelul econometric este utilizat pentru:",2,"a descrie fenomenele economice","a realiza predicții asupra realității economice supuse analizei","a explica dependența dintre fenomenele economice","Cheia din curs: a și c. Atenție: textul cursului spune că scopul include „descrierea și explicarea dependențelor”; la examen urmează baremul profesorului."],
+[1,"Parametrii modelului econometric sunt:",1,"constante reale necunoscute","variabile aleatoare","valori reale calculate pe baza datelor empirice","Estimatorii sunt variabile aleatoare; estimațiile sunt valorile calculate pe eșantion."],
+[1,"Econometria asigură suportul pentru:",3,"testarea teoriilor economice","dezvoltarea de noi teorii","luarea deciziilor economice","Scopul: suport empiric pentru formularea și verificarea teoriilor și pentru deciziile de politică economică."],
+[1,"În modelarea econometrică se utilizează următoarele tipuri de variabile:",2,"aleatoare","deterministe","mixte","Eroarea este variabilă aleatoare; variabilele independente sunt deterministe (nestochastice)."],
+[1,"Conceptul de model vizează:",1,"o reprezentare schematică a realității","o reproducere fidelă a realității","un instrument de descriere a unui fenomen","Modelul este o prezentare formalizată, schematică a realității."],
+[2,"În modelul de regresie liniară simplă, parametrul β₁ reprezintă:",2,"variația absolută medie a lui Y la o variație cu o unitate a lui X","panta dreptei de regresie","ordonata la origine","nivelul mediu al lui Y dacă X ia valoarea 1","Ordonata la origine este β₀ (Y mediu pentru X = 0)."],
+[2,"Coeficientul de corelație este identic cu panta dreptei de regresie dacă:",1,"valorile celor două variabile sunt standardizate","valorile lui Y sunt mai mari decât ale lui X","valorile celor două variabile sunt diferite","La standardizare, b₁ = r."],
+[2,"Coeficientul de determinație arată:",2,"gradul de intensitate a legăturii dintre două variabile","ponderea variației lui Y explicată de variația lui X","egalitatea mediilor a două populații","Cheia din curs: a și b."],
+[2,"Corelații (n = 474): r = ,661; Sig = ,000. Valoarea calculată a testului Student pentru ipoteza existenței unei legături este:",1,"19,11","11,99","33,2","t = r·√(n−2)/√(1−r²) ≈ 19,1 (tabelul coeficienților dă t = 19,115). Cheia tipărită în curs indică „c”, dar calculul dă 19,11."],
+[2,"Salariu în funcție de ani de studii: constanta B = −18331,2 (t = −6,496; Sig = ,000); ani de studii B = 3909,9 (Std. Error = 204,547; t = 19,115; Sig = ,000). Sunt valabile:",2,"la +1 an de studii, salariul crește în medie cu 3909,9$","cu un risc de 5% se respinge ipoteza că anii de studii nu influențează salariul","la +1 an de studii, salariul scade în medie cu 18331,2$","cu o eroare de 5% se acceptă că între variabile nu există nicio legătură","β₁ = 3909,9 și Sig < 0,05."],
+[2,"Pentru r = ,661, Sig (2-tailed) = ,000 și n = 474, sunt valabile:",2,"coeficientul de corelație este semnificativ statistic","cu o eroare de 5% se respinge ipoteza că salariul nu este influențat de educație","semnificația testului este 0,661","Sig = 0,000 < 0,05 ⇒ se respinge H₀: ρ = 0."],
+[2,"Pentru r = ,661 (Beta standardizat = ,661), sunt valabile:",2,"0,661 este estimația coeficientului de corelație","0,661 este panta de regresie pentru modelul cu variabile standardizate","cu un risc de 5%, valoarea 0,661 este nesemnificativă","În regresia simplă cu variabile standardizate, b₁ = r."],
+[3,"Pensionari în funcție de PIB (mil. lei) și populația rurală: constanta B = 6597,929 (Sig = ,355); PIB B = 11,215 (Sig = ,000); populația rurală B = ,161 (Sig = ,000). Este valabilă interpretarea:",1,"numărul de pensionari crește în medie cu 11,21 persoane la +1 mil. lei PIB, în condițiile în care populația rurală rămâne constantă","numărul de pensionari crește în medie cu 11,21 persoane la +1 mil. lei PIB, indiferent de populația rurală","numărul de pensionari scade în medie cu 0,161 persoane la +1 mil. lei PIB","Influența parțială se interpretează cu celelalte variabile constante."],
+[3,"Același model (constanta Sig = ,355; PIB Sig = ,000; populația rurală Sig = ,000). Sunt valabile:",3,"cele două variabile independente au o influență semnificativă asupra lui Y","nu toți parametrii modelului sunt semnificativi statistic","din model ar trebui eliminat parametrul β₀","toți parametrii modelului sunt semnificativi statistic","estimația β₀ = 6597,92 este semnificativ diferită de zero","Constanta are Sig = 0,355 > 0,05, deci este nesemnificativă."],
+[3,"Interval de încredere 95% pentru parametrul PIB: limita inferioară 9,579; limita superioară 13,581. Intervalul estimat este:",1,"(9,579 ; 13,581)","(9,575 − 1,96 ; 9,575 + 1,96)","(0,135 − 1,96 ; 0,135 + 1,96)","Limitele se citesc direct din tabel."],
+[3,"Corelație parțială (variabilă de control: populația rurală): pensionari – PIB = ,863 (Sig = ,000; df = 38). Valoarea 0,863 reprezintă:",1,"coeficientul de corelație parțială dintre PIB și numărul de pensionari","coeficientul de corelație bivariată dintre PIB și numărul de pensionari","coeficientul de corelație dintre populația rurală și numărul de pensionari","coeficientul de corelație parțială dintre populația rurală și PIB","Corelația bivariată PIB–pensionari este 0,857."],
+[3,"Matricea de corelație: pensionari–PIB = ,857; pensionari–populația rurală = ,662; PIB–populația rurală = ,398 (Sig = ,010). Sunt valabile:",2,"între PIB și numărul de pensionari există o legătură directă puternică","coeficientul bivariat dintre PIB și populația rurală este 0,398 și este semnificativ statistic","0,662 este coeficientul de corelație parțială dintre pensionari și populația rurală","0,662 este corelație bivariată (Pearson), nu parțială."],
+[4,"Model reciproc: variabila independentă este 1/rata șomajului; B = 103,302 (Sig = ,001); constanta = 52,029. Estimația b = 103,302 arată:",1,"cu cât scade indicele salariului real la o creștere cu 1% a ratei","cu cât crește indicele salariului real la o creștere cu 1% a ratei","nivelul indicelui salariului real când rata este infinită","Nivelul pentru rata infinită este constanta (52,029)."],
+[4,"ln(speranța de viață) în funcție de ln(PIB/loc): B = ,095 (Std. Error = ,007; t = 14,153); constanta = 32,713. Ecuația estimată este:",2,"Y = 32,71 · X^0,095","ln Y = ln 32,71 + 0,095 · ln X","Y = 32,71 + 0,095 · X","Model log-liniar (putere); b₁ = 0,095 este elasticitatea."],
+[4,"ln(mortalitate infantilă) în funcție de ln(PIB/loc): B = −,628 (Sig = ,000). Valoarea −0,628 indică:",1,"scăderea procentuală a mortalității la o creștere cu 1% a PIB/loc","scăderea mortalității la o creștere cu 1 $ a PIB/loc","creșterea mortalității la o creștere cu 1 $ a PIB/loc","Este elasticitatea: variație procentuală la variație procentuală."],
+[4,"Speranța de viață în funcție de ln(PIB/loc): b₁ = 6,154; b₀ = 21,67. Sunt corecte:",2,"ecuația estimată este y = 21,67 + 6,154 · ln x","b₁/100 = 6,154/100 arată cu cât crește în medie speranța de viață la +1% PIB/loc","b₀ = 21,67 este speranța medie de viață estimată pentru PIB/loc = 0 $","b₀ corespunde lui X = 1 $, nu 0 $ (ln 0 nu există)."],
+[4,"Același model (b₁ = 6,154; b₀ = 21,67). Este corectă afirmația:",1,"b₀ = 21,67 este speranța medie de viață estimată pentru PIB/loc = 1 $","b₁ = 6,154 arată cu cât crește speranța de viață la o creștere cu 1% a PIB/loc","ecuația estimată este ln y = 21,67 + 6,154 · x","Efectul unei creșteri de 1% este b₁/100, nu b₁."],
+[5,"Analiza influenței nivelului educației (primar, mediu, superior) asupra venitului se poate realiza cu:",1,"un model ANOVA cu 2 variabile dummy","un model ANOVA cu 3 variabile dummy","metoda statisticii descriptive","un model ANCOVA","3 categorii ⇒ 2 dummy; fără variabile numerice ⇒ ANOVA."],
+[5,"Salariu = a₀ + a₁·gen (0 feminin, 1 masculin): constanta = 26031,921; gen: B = 15409,862. Salariul mediu estimat pentru bărbați este:",1,"41441,78 lei","26031,92 lei","1407,96 lei","a₀ + a₁ = 26031,92 + 15409,86 = 41441,78."],
+[5,"Același model (a₀ = 26031,921; a₁ = 15409,862). Diferența dintre salariul mediu al bărbaților și al femeilor este:",1,"15409,86 lei","26031,92 lei","41441,78 lei","a₁ este diferența dintre mediile celor două grupe."],
+[5,"Speranța medie de viață pe județe: a₀ = 74,95; a₁ = −7,41 (D = 1 pentru bărbați). Sunt corecte:",3,"ecuația estimată este y = 74,95 − 7,41·D","a₀ + a₁ = 67,54 este speranța medie de viață masculină","a₁ = −7,41 este diferența dintre speranța masculină și cea feminină","a₀ = 74,95 este speranța medie de viață masculină","a₀ este media grupei cu D = 0 (femeile)."],
+[5,"Salariu în funcție de gen (alt: 0 feminin, 1 masculin) și educație (ani): a₀ = −15924,5; a₁ = 8423,46; b = 3391,68. Sunt corecte:",4,"a₀ este salariul mediu estimat al femeilor pentru X = 0 ani de studii","a₁ este diferența dintre salariul mediu al bărbaților și al femeilor","b este creșterea salariului mediu la +1 an de educație, indiferent de gen","o femeie câștigă în medie cu 8423,46$ mai puțin decât un bărbat","Toate afirmațiile sunt corecte."],
+[6,"Un model de regresie este homoscedastic dacă:",1,"varianțele erorilor de modelare sunt egale","erorile de modelare sunt independente","erorile au dispersia cuprinsă în intervalul (0,1)","Homoscedasticitate: Var(εᵢ) = σ², constantă."],
+[6,"Testul Durbin-Watson se utilizează pentru testarea:",1,"independenței erorilor","coliniarității variabilelor factoriale","homoscedasticității erorilor","DW verifică autocorelarea de ordin 1."],
+[6,"Într-un model de regresie multiplă, dacă variabilele independente sunt perfect coliniare:",1,"dispersia estimatorilor parametrilor este infinită","dispersia estimatorilor parametrilor este zero","erorile de modelare sunt minime","Parametrii nu pot fi estimați."],
+[6,"În testarea autocorelării erorilor, dacă statistica Durbin-Watson este d = 0, se poate considera că:",1,"există autocorelare pozitivă maximă între erori","există autocorelare negativă maximă între erori","nu există autocorelare între erori","Conform teoriei din curs: d = 0 ⇒ pozitivă maximă; d = 2 ⇒ fără autocorelare; d = 4 ⇒ negativă maximă. Cheia tipărită în curs indică „c”, ceea ce pare o greșeală."],
+[6,"Model Summary: DW = 1,483; valori critice dL = 1,503 și dU = 1,585 (α = 0,05). Se poate considera că:",1,"erorile de modelare sunt autocorelate pozitiv","erorile de modelare sunt autocorelate negativ","nu este posibilă luarea unei decizii","d < dL ⇒ regiune de respingere: autocorelare pozitivă."],
+[6,"Normalitatea erorilor (n = 11): asimetrie = −,252; boltire = 1,063; χ²(0,05; 2) = 5,99. Se poate considera că:",1,"erorile urmează o lege de repartiție normală","erorile nu urmează o lege de repartiție normală","erorile sunt independente","JB = n·(S²/6 + K²/24) ≈ 0,63, mai mic decât 5,99 ⇒ se acceptă normalitatea."],
+[6,"Într-un model de regresie multiplă, dacă variabilele independente nu sunt perfect coliniare:",1,"dispersia estimatorilor parametrilor este mare","dispersia estimatorilor parametrilor este zero","erorile de modelare sunt minime","Cheia din curs: b (cazul coliniarității imperfecte: varianțe mari)."],
+[6,"Dacă indicatorul Tolerance are valoarea TOL = 1, variabilele independente sunt:",1,"necoliniare","coliniare","dependente","TOL = 1/VIF; TOL = 1 ⇒ VIF = 1 ⇒ fără coliniaritate."],
+[6,"Coliniaritatea este perfectă atunci când:",1,"între variabilele independente există o legătură liniară deterministă λ₁X₁ + λ₂X₂ + … + λₚXₚ = 0","între ele există o legătură liniară stochastică λ₁X₁ + … + λₚXₚ + ε = 0","între ele nu există o legătură liniară","Varianta cu termen aleator ε descrie coliniaritatea imperfectă."]
+];
+const D=Q.map(([c,q,...r])=>{const e=r.pop();return{c,q,a:[r[0]],o:r,e}}).concat(T.map(([c,q,n,...r])=>{const e=r.pop();return{c,q,a:r.slice(0,n),o:r,e,t:1}}));
+const $=document.getElementById("app");
+let pool,i,s,w;
+function sh(a){a=a.slice();for(let k=a.length;k>1;){const j=Math.floor(Math.random()*k--);[a[k],a[j]]=[a[j],a[k]]}return a}
+function menu(){
+ $.innerHTML="<h1>Econometrie – test grilă</h1><p class=m>"+D.length+" întrebări ("+D.filter(d=>d.t).length+" din testele de la finalul capitolelor, unele cu mai multe răspunsuri corecte) · ordinea se amestecă</p><div class=g><button data-c=0><b>Toate capitolele</b> ("+D.length+")</button><button data-c=t><b>Doar testele din curs</b> ("+D.filter(d=>d.t).length+")</button>"+
+ Object.entries(CH).map(([k,v])=>"<button data-c="+k+">"+v+" ("+D.filter(d=>d.c==k).length+")</button>").join("")+"</div>";
+ $.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>go(D.filter(d=>b.dataset.c=="t"?d.t:(b.dataset.c==0||d.c==b.dataset.c))));
+}
+function go(l){pool=sh(l);i=0;s=0;w=[];show()}
+function show(){
+ if(i>=pool.length)return end();
+ const d=pool[i],o=sh(d.o),mu=d.a.length>1;
+ $.innerHTML="<div class=m>Întrebarea "+(i+1)+" din "+pool.length+" · corecte: "+s+(d.t?" · test din curs":"")+"</div><div class=bar><i style='width:"+(i/pool.length*100)+"%'></i></div><h2>"+d.q+"</h2>"+(mu?"<p class=m>Bifează toate răspunsurile corecte, apoi apasă Verifică.</p>":"")+o.map(x=>"<button class=o>"+x+"</button>").join("")+(mu?"<button id=v class=nx>Verifică</button>":"")+"<div id=f></div>";
+ const B=[...$.querySelectorAll(".o")],f=document.getElementById("f");
+ const fin=ok=>{
+  ok?s++:w.push(d);
+  B.forEach(x=>{x.disabled=true;x.classList.remove("sel");if(d.a.includes(x.textContent))x.classList.add("ok");else if(x.dataset.s)x.classList.add("no")});
+  const v=document.getElementById("v");if(v)v.remove();
+  f.innerHTML="<p class='e "+(ok?"y":"n")+"'><b>"+(ok?"Corect! ":"Greșit. ")+"</b>"+(mu?"Răspunsurile corecte sunt marcate cu verde. ":"")+d.e+"</p><button class=nx>"+(i+1<pool.length?"Următoarea →":"Vezi rezultatul")+"</button>";
+  f.querySelector(".nx").onclick=()=>{i++;show()};
+ };
+ B.forEach(b=>b.onclick=()=>{
+  if(mu){b.dataset.s=b.dataset.s?"":"1";b.classList.toggle("sel")}
+  else{b.dataset.s="1";fin(d.a.includes(b.textContent))}
+ });
+ if(mu)document.getElementById("v").onclick=()=>fin(B.every(x=>!!x.dataset.s==d.a.includes(x.textContent)));
+}
+function end(){
+ const p=Math.round(s/pool.length*100);
+ $.innerHTML="<h1>Rezultat</h1><div class=big>"+s+" / "+pool.length+" ("+p+"%)</div>"+(w.length?"<button id=r>Refă doar întrebările greșite ("+w.length+")</button>":"<p>Toate răspunsurile sunt corecte. Bravo!</p>")+"<button id=mn>Înapoi la meniu</button>";
+ if(w.length)document.getElementById("r").onclick=()=>go(w);
+ document.getElementById("mn").onclick=menu;
+}
+menu();
+</script></body></html>
